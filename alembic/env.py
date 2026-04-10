@@ -25,7 +25,12 @@ if config.config_file_name is not None:
 target_metadata = Base.metadata
 
 # Set the SQLAlchemy URL from our configuration
-config.set_main_option("sqlalchemy.url", str(settings.DATABASE_URL))
+db_url_str = str(settings.DATABASE_URL)
+if db_url_str.startswith("postgres://"):
+    db_url_str = db_url_str.replace("postgres://", "postgresql+asyncpg://", 1)
+elif db_url_str.startswith("postgresql://"):
+    db_url_str = db_url_str.replace("postgresql://", "postgresql+asyncpg://", 1)
+config.set_main_option("sqlalchemy.url", db_url_str)
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
