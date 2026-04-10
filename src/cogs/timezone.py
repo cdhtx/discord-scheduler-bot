@@ -17,13 +17,13 @@ class TimezoneCog(commands.Cog):
     @tz_group.command(name="set", description="Set your timezone (e.g. US/Eastern, UTC)")
     @app_commands.describe(timezone="Your IANA timezone (e.g. America/New_York)")
     async def set_timezone(self, interaction: discord.Interaction, timezone: str):
-        # Validate timezone
-        if timezone not in pytz.all_timezones:
-             # Try to be helpful with case sensitivity or partial matches?
-             # For now, strict check.
+        # Validate timezone flexibly (case-insensitive)
+        matched_tz = next((tz for tz in pytz.all_timezones if tz.lower() == timezone.lower()), None)
+        if not matched_tz:
              await interaction.response.send_message(embed=EmbedBuilder.error("Invalid Timezone", "Please provide a valid IANA timezone name (e.g. `America/New_York`, `UTC`, `Europe/London`)."), ephemeral=True)
              return
-
+             
+        timezone = matched_tz # Use the correctly capitalized version
         async with AsyncSessionLocal() as session:
             # Upsert
             stmt = insert(UserConfig).values(user_id=interaction.user.id, timezone=timezone)
