@@ -24,7 +24,6 @@ class SessionCog(commands.Cog):
         campaign="Campaign slug",
         title="Session title",
         times="Proposed times (comma separated, Format: YYYY-MM-DD HH:mm)",
-        datetime_format="Format of the times provided (default: YYYY-MM-DD HH:mm)",
         description="Session description",
         timezone="Timezone for the times (e.g. US/Eastern, UTC)",
         quorum="Number of players needed",
