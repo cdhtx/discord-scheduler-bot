@@ -110,7 +110,7 @@ class SessionCog(commands.Cog):
             options_db = res_opts.scalars().all()
             
             embed = create_session_embed(new_session, options_db, [], dm_member)
-            view = SessionRSVPView(new_session.id)
+            view = SessionRSVPView()
             
             # Send message
             target_channel = interaction.guild.get_channel(camp.channel_id) if camp.channel_id else interaction.channel
@@ -129,9 +129,9 @@ class SessionCog(commands.Cog):
             await session.commit()
             
             if target_channel.id != interaction.channel_id:
-                 await interaction.followup.send(f"Session proposed in {target_channel.mention}", ephemeral=True)
+                 await interaction.followup.send(f"Session proposed in {target_channel.mention}. **Session ID:** `{new_session.id}`", ephemeral=True)
             else:
-                 await interaction.delete_original_response()
+                 await interaction.followup.send(f"Session proposed successfully. **Session ID:** `{new_session.id}`", ephemeral=True)
 
     @session_group.command(name="status", description="Get status of the latest session or specific session")
     async def session_status(self, interaction: discord.Interaction, campaign: str, session_id: int = None):
@@ -171,9 +171,8 @@ class SessionCog(commands.Cog):
             dm_member = interaction.guild.get_member(camp.dm_id)
             
             embed = create_session_embed(sess_obj, options, rsvps, dm_member)
-            # Add view purely for display (no edit capability here unless we want to allow RSVP from here too)
             # If we allow RSVP from here, we should attach the view.
-            view = SessionRSVPView(sess_obj.id)
+            view = SessionRSVPView()
             
             await interaction.followup.send(embed=embed, view=view)
 
@@ -263,8 +262,8 @@ class SessionCog(commands.Cog):
                          rsvps = res_rsvps.scalars().all()
                          
                          new_embed = create_session_embed(sess_obj, options, rsvps, interaction.user)
-                         await msg.edit(embed=new_embed, view=SessionRSVPView(sess_obj.id))
-                 except Exception as e:
+                         await msg.edit(embed=new_embed, view=SessionRSVPView())
+                 except: 
                      logger.warning(f"Failed to update original message: {e}")
 
     @session_group.command(name="cancel", description="Cancel a session")
@@ -307,7 +306,7 @@ class SessionCog(commands.Cog):
                      rsvps = res_rsvps.scalars().all()
                      
                      new_embed = create_session_embed(sess_obj, options, rsvps, interaction.user)
-                     await msg.edit(embed=new_embed, view=SessionRSVPView(sess_obj.id))
+                     await msg.edit(embed=new_embed, view=SessionRSVPView())
                  except: 
                      pass
 

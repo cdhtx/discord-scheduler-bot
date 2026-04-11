@@ -110,6 +110,7 @@ class SessionRSVP(Base):
     # Let's add `option_id` to RSVP to be safe.
     
     option_id: Mapped[Optional[int]] = mapped_column(ForeignKey("session_options.id"), nullable=True)
+    priority: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
 
     session: Mapped["Session"] = relationship(back_populates="rsvps")
     option: Mapped[Optional["SessionOption"]] = relationship()

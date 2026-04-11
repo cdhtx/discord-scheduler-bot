@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     DISCORD_TOKEN: SecretStr
-    DATABASE_URL: PostgresDsn
+    DATABASE_URL: str
     LOG_LEVEL: str = "INFO"
     
     # Optional: Test guild ID for rapid command syncing during dev

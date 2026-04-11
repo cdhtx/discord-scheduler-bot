@@ -44,6 +44,10 @@ class DnDSchedulerBot(commands.Bot):
                 logger.info(f"Loaded extension {ext}")
             except Exception as e:
                 logger.error(f"Failed to load extension {ext}: {e}", exc_info=True)
+                
+        # Register persistent views
+        from src.ui.views import SessionRSVPView
+        self.add_view(SessionRSVPView())
         
         # Sync app commands
         if settings.TEST_GUILD_ID:
